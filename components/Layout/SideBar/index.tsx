@@ -4,13 +4,25 @@ import {
   UserOutlined,
   LogoutOutlined,
 } from "@ant-design/icons";
-import React from "react";
+import React, { useCallback } from "react";
 import SideBarLogo from "../SideBarLogo";
 import { useRouter } from "next/navigation";
 import ButtonCommon from "@/components/ButtonComponent";
+import useLoginModal from "@/components/hooks/useLoginModal";
+import useCurrentUser from "@/components/hooks/useCurrentUser";
 
 const SideBar = () => {
   const router = useRouter();
+  const loginModal = useLoginModal();
+  const { data: currentUser } = useCurrentUser();
+
+  const onClick = useCallback(() => {
+    if (!currentUser) {
+      return loginModal.onOpen();
+    }
+
+    router.push('/');
+  }, [loginModal, router, currentUser]);
   const items = [
     {
       label: "Home",
@@ -67,7 +79,7 @@ const SideBar = () => {
             <ButtonCommon
               label="Tweet"
               className="bg-[#00ADB5] text-[#EEEEEE] transition hover:bg-[#078a91] cursor-pointer font-bold mx-auto text-center py-2 rounded-3xl !w-[50%]"
-              onClick={() => {}}
+              onClick={onClick}
             />
           </div>
         </div>
